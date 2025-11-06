@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../app/generated/prisma" //We don't need to provide an output directory for mongodb
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BlLOCKED
+}
+
+type nestedUser {
+  id       String
+  username String
+  image    String
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  password  String?
+  name      String?
+  image     String?
+  username  String?   @unique(map: "username_unique")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Message {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  fromUserId     String // @db.ObjectId
+  toUserId       String // @db.ObjectId
+  content        String
+  fromUser       nestedUser?
+  toUser         nestedUser?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Conversation {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  participantIds String[]
+//  messages       Message[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+
+  @@index([participantIds])
+}
