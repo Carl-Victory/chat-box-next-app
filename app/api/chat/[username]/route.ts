@@ -1,12 +1,11 @@
 import prisma from "@/lib/connection.prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
-// ✅ GET: Fetch conversation history between logged-in user and another user
 export async function GET(
-  req: Request,
-  { params }: { params: { username: string } }
+  req: NextRequest,
+  context: { params: Promise<{ username: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
@@ -22,8 +21,9 @@ export async function GET(
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  // `params` is possibly an awaited object in Next.js dynamic API routes.
-  const { username: otherUsername } = (await params) as { username: string };
+  // `params` may be provided as a Promise in the platform context — await it.
+  const params = await context.params;
+  const { username: otherUsername } = params as { username: string };
 
   const otherUser = await prisma.user.findUnique({
     where: { username: otherUsername },
@@ -53,8 +53,8 @@ export async function GET(
 }
 
 export async function POST(
-  req: Request,
-  { params }: { params: { username: string } } //not sure about this typing
+  req: NextRequest,
+  context: { params: Promise<{ username: string }> } // context.params may be a Promise
 ) {
   const session = await getServerSession(authOptions);
   if (!session)
@@ -65,7 +65,8 @@ export async function POST(
   const { content } = body;
 
   // Resolve params before using
-  const { username: receiverUsername } = (await params) as { username: string };
+  const params = await context.params;
+  const { username: receiverUsername } = params as { username: string };
 
   const receiver = await prisma.user.findUnique({
     where: { username: receiverUsername },

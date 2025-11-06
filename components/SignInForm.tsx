@@ -4,7 +4,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
-import ThemeToggle from "./ToggleTheme";
 import { FaApple, FaGithub } from "react-icons/fa";
 import { IoArrowBackSharp } from "react-icons/io5";
 
