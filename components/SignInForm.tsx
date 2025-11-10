@@ -57,11 +57,13 @@ export default function SignInForm() {
 
   return (
     <div>
-      <div className="relative max-w-md mx-6 flex flex-col items-center justify-center">
+      <div className="relative max-w-md  mx-6 flex flex-col items-center justify-center">
         <div className="absolute top-6 left-0">
           <IoArrowBackSharp />
         </div>
-        <h1 className="mt-24 font-bold text-lg">Login to ChatBox</h1>
+        <h1 className="mt-24 font-bold text-lg text-center">
+          Login to ChatBox
+        </h1>
         <p className=" text-center mt-4 text-neutral-500 text-sm ">
           Welcome back! Sign in using your social <br /> account or email to
           continue{" "}
@@ -138,7 +140,7 @@ export default function SignInForm() {
         </form>
       </div>
 
-      <div>
+      <div className="flex flex-col items-center">
         <Link href={"/signup"}>
           <p className="text-sm pt-4 text-center text-teal-500">
             Not already registered? Sign Up with Email.
